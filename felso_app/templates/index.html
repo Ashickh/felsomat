@@ -1,0 +1,231 @@
+<!DOCTYPE html>
+<html lang="en">
+    {% load static%}
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=\, initial-scale=1.0">
+    <title>felsomat</title>
+    <!-- Include necessary Bootstrap and CSS libraries here -->
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+    <link rel="stylesheet" href="{% static 'js/components.js'%}">
+    <link rel="stylesheet" href="{% static 'js/groups.js'%}">
+    <style>
+
+        /* Custom CSS for adjusting image height */
+        .carousel-image {
+            height: 500px; /* Adjust the height as needed */
+            object-fit: cover; /* Preserve the aspect ratio and cover the entire space */
+        }
+        /* Style for the input fields */
+        .form-control {
+            border: none; /* Remove default border */
+            border-bottom: 3px solid #101010; /* Add bottom border */
+            border-radius: 0; /* Remove border radius */
+            padding: 10px; /* Adjust padding as needed */
+            
+            width: 100%; /* Adjust the width as needed */
+        }
+
+        .custom-button {
+        background-color: #787a7c; /* Button color */
+        color: white; /* Text color */
+        border: none;
+        padding: 10px 20px;
+        border-radius: 4px;
+        cursor: pointer;
+        box-shadow: 0px 4px 10px rgba(0, 0, 0, 0.2); /* Box shadow */
+        transition: box-shadow 0.3s, background-color 0.3s; /* Smooth transition */
+    }
+
+    /* Button hover effect */
+    .custom-button:hover {
+        background-color: #848689; /* Change background color on hover */
+        box-shadow: 0px 6px 12px rgba(0, 0, 0, 0.3); /* Adjust box shadow on hover */
+    }
+
+
+
+        /* Custom CSS for the centered div */
+        .centered-navbar {
+            background-color: hsl(0, 40%, 98%); /* Background color */
+            padding: 10px 0; /* Padding top and bottom */
+            text-align: center; /* Center-align text */
+            
+            
+        }
+        #links{
+            color: #c4c8ca; /* Set the link color (blue in this example) */
+            font-size: 16px; /* Set the font size (adjust as needed) */
+            text-decoration: none; /* Remove underline from links */
+            margin-right: 20px; /* Add some spacing between links */
+        }
+
+        .centered-navbar a:hover {
+        color: #959190; /* Change color on hover (orange in this example) */
+        }
+
+        /* Style for the links in the centered div */
+        .centered-navbar a {
+            color: #333; /* Link color */
+            text-decoration: none; /* Remove underlines */
+            margin: 0 20px; /* Add spacing between links */
+            font-weight: bold; /* Bold text */
+        }
+
+        .image-container {
+            display: flex;
+            justify-content: flex-end; /* Align the content to the end of the div */
+            align-items: center; /* Center the image vertically within the div */
+}
+
+
+    </style>
+
+</head>
+<body>
+    <!-- Bootstrap Navbar -->
+    <div class="container-fluid">
+<nav class="navbar navbar-expand-lg navbar-light bg-light">
+    <a class="navbar-brand" href="#">FELSOMAT</a>
+    <button class="navbar-toggler" type="button" data-toggle="collapse" data-target="#navbarNav"
+            aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+        <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarNav">
+        <ul class="navbar-nav ml-auto">
+            <li class="nav-item">
+                <a class="nav-link" href="{% url 'home' %}">Home</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">About</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Services</a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" href="#">Contact</a>
+            </li>
+        </ul>
+    </div>
+</nav>
+</div>
+
+<div class="container-fluid">
+    <div class="row">
+        <div class="col-1">   </div>
+        <div class="col-10 image-container">  
+            <a href="{% url 'home'%}"><img class="img-fluid" src="{% static 'images/felsomat_logo.png' %}" alt="" width="350" height="60"></a>
+        </div>
+        <div class="col-1" style="margin-top: 15px;">  
+            </div>
+    </div>
+<br>
+<!-- Centered Div That Looks Like a Navbar with Links -->
+<div class="centered-navbar">
+    <div class="container-fluid" id="links">
+    <a href="{% url 'create-components' %}">CREATE ESTIMATED PRICING SHEET</a>
+    <a href="{% url 'get-components' %}">LIST ESTIMATED PRICING SHEETS</a>
+    <a href="{% url 'create-groups' %}">COMMISSION CALCULATION</a>
+</div>
+</div>
+<br>
+
+{%block body_block%}
+
+                    {%endblock%}
+
+<!-- Include Bootstrap JavaScript library (jQuery is required) -->
+<script src="https://code.jquery.com/jquery-3.5.1.slim.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/@popperjs/core@2.11.6/dist/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js"></script>
+<script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+<script>
+    $(document).ready(function () {
+        // Handle form submission using AJAX
+        $('#groups-form').on('submit', function (e) {
+            e.preventDefault(); // Prevent the default form submission
+  
+            var createComponentUrl = "{% url 'create-groups' %}";
+            var form = this;
+            var isValid = true;
+
+            $(this).find('input[type="text"]').each(function () {
+                var fieldValue = $(this).val().trim();
+                if (!fieldValue) {
+                    alert('Please fill out all required fields.');
+                    isValid = false;
+                    return false; // Exit the loop early if any field is empty
+                }
+            });
+
+            if (!isValid) {
+                return;
+            }
+
+
+            $.ajax({
+                url: createComponentUrl,  // Use the generated URL
+                method: 'POST',
+                data: $(this).serialize(),  // Serialize form data
+                success: function (data) {
+                    // Update the table with the newly created component
+                    $('#groups-table').append('<tr><td>' + data.project + '</td><td>' 
+                    + data.item_name + '</td> <td>' + data.base_quantity + '</td> <td>' 
+                        + data.group_cost + '</td> <td>' + data.type + '</td></tr>');
+
+                    $(form)[0].reset();
+                },
+                error: function (error) {
+                    console.error('Error:', error);
+                }
+            });
+        });
+    });
+</script>
+<script>
+    $(document).ready(function () {
+    // Handle form submission using AJAX
+    $('#components-form').on('submit', function (e) {
+        e.preventDefault(); // Prevent the default form submission
+
+        var createComponentUrl = "{% url 'create-components' %}";
+        var form = this;
+        var isValid = true;
+
+            $(this).find('input[type="text"]').each(function () {
+                var fieldValue = $(this).val().trim();
+                if (!fieldValue) {
+                    alert('Please fill out all required fields.');
+                    isValid = false;
+                    return false; // Exit the loop early if any field is empty
+                }
+            });
+
+            if (!isValid) {
+                return;
+            }
+
+        $.ajax({
+            url: createComponentUrl,  // Use the generated URL
+            method: 'POST',
+            data: $(this).serialize(),  // Serialize form data
+            success: function (data) {
+                // Update the table with the newly created component
+                $('#components-table').append('<tr><td>' + data.project + '</td><td>' 
+                + data.item_name + '</td> <td>' + data.base_quantity + '</td> <td>' 
+                    + data.new_unit_price + '</td> <td>' + data.type + '</td></tr>');
+
+                $(form)[0].reset();
+            },
+            error: function (error) {
+                console.error('Error:', error);
+            }
+        });
+    });
+});
+</script>
+
+
+</body>
+</html>
